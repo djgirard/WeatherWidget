@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Weather Widget</title>
+    <meta name="description" content="Weather Widget">
+    <meta name="author" content="Dan Girard">
+    <link rel="stylesheet" type="text/css" href="style/global.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <div class="item-a">
+        <div id="temperature0"></div>
+        <div id="icon0"></div>
+    </div>
+    <div class="item-b">
+        <div id="date"></div>
+    </div>
+    <div class="item-c">
+        <ul>
+            <li>
+                Tomorrow
+                <div id="icon1"></div>
+                <div id="temperature1"></div>
+            </li>
+            <li>
+                2 Day
+                <div id="temperature2"></div>
+            </li>
+            <li>
+                3 Day
+                <div id="temperature3"></div>
+            </li>
+            <li>
+                4 Day
+                <div id="temperature4"></div>
+            </li>
+            <li>
+                5 Day
+                <div id="temperature5"></div>
+            </li>
+        </ul>
+    </div>
+    <div class="item-d">
+        Sunrise:
+        <div id="sunrise"></div>
+        Sunset:
+        <div id="sunset"></div>
+        <div id="data"></div>
+        
+    </div>
+</div>
+    
+    <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+<script>
+        $(function() {
+            var url = "http://api.openweathermap.org/data/2.5/forecast?zip=02116&units=Imperial&appid=2037c48116b3a6fcf96dd3374e7725ba";
+            
+            window['wxCallback'] = function(weatherData) {
+                counter = 0;
+                while (counter <6){
+                    var currentTemp = weatherData.list[counter].main.temp;
+                    $('#temperature'+counter).html(currentTemp);
+                    counter++;
+                }
+                while (counter <6){
+                    var currentIcon = "<img src='http://openweathermap.org/img/w/'" + weatherData.list[counter].icon + "'.png'>";
+                    $('#icon'+counter).html(currentIcon);
+                    counter++;
+                }
+                var currentSunrise = weatherData.sys.sunrise;
+                var currentSunset = weatherData.sys.sunset;
+                $('#data').html(JSON.stringify(weatherData));
+                $('#temperature0').html(currentTemp);
+                $('#icon').html(currentIcon);
+                $('#sunrise').html(currentSunrise);
+                $('#sunset').html(currentSunset);
+                $('#temperature1').html(tomorrowTemp);
+                $('#temperature2').html(tomorrowTemp);
+            };
+                
+            $.ajax({
+                url: url,
+                dataType: 'jsonp',
+                cache: true,
+                jsonpCallback: 'wxCallback'
+            });
+        });
+</script>
+   
+</body>
+</html>
